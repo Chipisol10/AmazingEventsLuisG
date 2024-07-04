@@ -1,0 +1,18 @@
+.logo{
+    height: 30px;
+}
+.carrousel{
+    max-height: 50vh;
+}
+
+.top-carrousel{
+   top: 4rem;
+}
+
+.card-width{
+    width:18rem;
+}
+
+.checkbox{
+    white-space: nowrap;
+}
