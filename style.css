@@ -16,3 +16,9 @@
 .checkbox{
     white-space: nowrap;
 }
+
+.min-h{
+    min-height: 85vh;
+}
+
+
