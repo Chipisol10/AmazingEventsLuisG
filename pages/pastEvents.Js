@@ -196,26 +196,73 @@ const data = {
   };
 
  
-let contenedor = document.getElementById("contenedor")
-
-for (let i = 0; i < data.events.length; i++) {
-  let eventDate = data.events[i].date;
-    if (eventDate <= data.currentDate) {
-  let card1 = document.createElement("article")
-   card1.id ="card1"
-    card1.className = "card-width  card col-2"
-  card1.innerHTML = `    
-      <img src="${data.events[i].image}" class="card-img-top" alt="${data.events[i].name}">
-      <div class="card-body d-flex flex-column justify-content-between text-primary-emphasis border border-primary-subtle">
-      <h3 class="text">${data.events[i].name}</h3>
-      <p class="card-text">${data.events[i].description}</p>
-      <div class="d-flex justify-content-between align-items-center">
-          <p class="card-title fs-5">Price: ${data.events[i].price}$</p>
-          <a href="./pages/details.html" class="btn btn-outline-primary btn-primary-emphasis">Details</a>
-      </div>
-  </div>
-  `
-                  console.log(card1);
-                contenedor.appendChild(card1)
-}        
-}
+  let contenedor = document.getElementById("contenedor");
+  let checkboxContainer = document.getElementById("checkboxContainer");
+  
+  function generateCategoryFilters() {
+      const categories = [...new Set(data.events.map(event => event.category))];
+      checkboxContainer.innerHTML = '';
+  
+      categories.forEach(category => {
+          const checkbox = document.createElement('div');
+          checkbox.className = 'form-check';
+          checkbox.innerHTML = `
+              <input class="form-check-input" type="checkbox" value="${category}" id="${category}">
+              <label class="form-check-label" for="${category}">${category}</label>
+            `;
+          checkboxContainer.appendChild(checkbox);
+      });
+  }
+  
+  function applyEventFilters() {
+      const searchTerm = document.querySelector('input[type="search"]').value.toLowerCase();
+      const selectedCategories = Array.from(document.querySelectorAll('.form-check-input:checked')).map(checkbox => checkbox.value);
+  
+      const filteredEvents = data.events.filter(event => {
+          const matchesSearch = event.name.toLowerCase().includes(searchTerm) || event.description.toLowerCase().includes(searchTerm);
+          const matchesCategory = selectedCategories.length === 0 || selectedCategories.includes(event.category);
+          return matchesSearch && matchesCategory;
+      });
+  
+      showEventCards(filteredEvents);
+  }
+  
+  function showEventCards(events) {
+      contenedor.innerHTML = '';
+  
+      if (events.length === 0) {
+          contenedor.innerHTML = '<p class="text-center fs-5 mt-5 min-h">No se encontraron eventos que coincidan con tu búsqueda.</p>';
+          return;
+      }
+  
+      const row = document.createElement('div');
+      row.className = 'row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 justify-content-center';
+  
+      events.forEach(event => {
+          const eventDate = event.date;
+          if (eventDate <= data.currentDate) {
+              const card1 = document.createElement("article");
+              card1.className = "card-width  card col-2";
+              card1.innerHTML = `    
+                <img src="${event.image}" class="card-img-top" alt="${event.name}">
+                <div class="card-body d-flex flex-column justify-content-between text-primary-emphasis border border-primary-subtle">
+                <h3 class="text">${event.name}</h3>
+                <p class="card-text">${event.description}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="card-title fs-5">Price: ${event.price}$</p>
+                    <a href="details.html?id=${event._id}" class="btn btn-outline-primary btn-primary-emphasis">Details</a>
+                </div>
+            </div>
+            `;
+              contenedor.appendChild(card1);
+          }
+      });
+  }
+  
+  document.addEventListener('DOMContentLoaded', function() {
+      generateCategoryFilters();
+      showEventCards(data.events);
+  
+      document.querySelector('input[type="search"]').addEventListener('input', applyEventFilters);
+      checkboxContainer.addEventListener('change', applyEventFilters);
+  });
