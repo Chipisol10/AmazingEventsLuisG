@@ -56,8 +56,8 @@ export function showEventCards(events, contenedor) {
 export function eventDetailsDisplay(event){
     const detailContainer = document.getElementById("eventDetails");
 
-    const assistanceInfo = event.assistance ? `<li class"list-group-item text-primary-emphasis"><strong>Assistance: </strong>${event.assistance}</li>` : '';
-    const estimateInfo = event.estimate ? `<li class"list-group-item text-primary-emphasis"><strong>Estimate: </strong>${event.estimate}</li>` : '';
+    const assistanceInfo = event.assistance ? `<li class="list-group-item text-primary-emphasis"><strong>Assistance: </strong>${event.assistance}</li>` : '';
+    const estimateInfo = event.estimate ? `<li class="list-group-item text-primary-emphasis"><strong>Estimate: </strong>${event.estimate}</li>` : '';
 
 
     detailContainer.innerHTML = `
